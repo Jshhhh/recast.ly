@@ -1,7 +1,7 @@
 class App extends React.Component {
   constructor(props) {
     super(props);
-
+    
     this.state = {
       currentIndex: 0,
       data: exampleVideoData,
@@ -13,21 +13,30 @@ class App extends React.Component {
   //get key property from clicked dom object
   videoOnClick(event) {
     this.setState({ 
-      currentIndex: event.target.getAttribute("id"),
+      currentIndex: event.target.getAttribute('id'),
     });
   }
 
-  searchOnClick(event) {
+  searchOnClick() {
     var obj = {
       key: window.YOUTUBE_API_KEY,
       query: $('input').val(),
       max: 5
-    }
-    window.searchYouTube(obj, this.setState.bind(this));
+    };
+    this.props.searchYouTube(obj, this.setState.bind(this));
   }
 
+  searchOnKeyUp() {
+    var obj = {
+      key: window.YOUTUBE_API_KEY,
+      query: $('input').val(),
+      max: 10
+    };
+    this.props.searchYouTube(obj, this.setState.bind(this));    
+  }
+  
   componentDidMount() {
-    window.searchYouTube({key: window.YOUTUBE_API_KEY, query: 'cats', max: 5}, this.setState.bind(this))
+    this.props.searchYouTube({key: window.YOUTUBE_API_KEY, query: '', max: 10}, this.setState.bind(this));
   }
 
   render() {
@@ -35,7 +44,7 @@ class App extends React.Component {
       <div>
         <nav className="navbar">
           <div className="col-md-6 offset-md-3">
-            <Search methods={this.searchOnClick.bind(this)}/>
+            <Search method={this.searchOnKeyUp.bind(this)} methods={this.searchOnClick.bind(this)}/>
           </div>
         </nav>
         <div className="row">
