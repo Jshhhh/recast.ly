@@ -11,15 +11,12 @@ class App extends React.Component {
   //on click event
   //get key property from clicked dom object
   videoOnClick(event) {
-
-    // console.log(this);
     this.setState({ 
       currentIndex: event.target.getAttribute("id")
     });
   }
 
   render() {
-    var index = this.state.currentIndex;
     return (
       <div>
         <nav className="navbar">
