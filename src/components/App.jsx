@@ -16,12 +16,27 @@ class App extends React.Component {
     });
   }
 
+  getData(query) {
+    $.ajax({
+      method:'GET',
+      url:'https://www.googleapis.com/youtube/v3/search',
+      contentType: "application/jason; charset=utf-8",
+      dataType: "json",
+      data: {'key': window.YOUTUBE_API_KEY,'q': `${query}`, 'maxResults' : '5', 'videoEmbeddable' : 'true', 'type' : 'video', 'part': 'snippet'},
+      success: function(data) {
+        console.log(data);
+        return data;
+      }  
+    });
+  }
+
   render() {
+    var data1 = this.getData('cat');
     return (
       <div>
         <nav className="navbar">
           <div className="col-md-6 offset-md-3">
-            <Search/>
+            <Search />
           </div>
         </nav>
         <div className="row">
