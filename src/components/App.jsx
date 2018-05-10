@@ -1,9 +1,10 @@
 class App extends React.Component {
   constructor(props) {
     super(props);
-  
+
     this.state = {
-      currentIndex: 0
+      currentIndex: 0,
+      data: exampleVideoData,
     };
   }
 
@@ -12,39 +13,37 @@ class App extends React.Component {
   //get key property from clicked dom object
   videoOnClick(event) {
     this.setState({ 
-      currentIndex: event.target.getAttribute("id")
+      currentIndex: event.target.getAttribute("id"),
     });
   }
 
-  getData(query) {
-    $.ajax({
-      method:'GET',
-      url:'https://www.googleapis.com/youtube/v3/search',
-      contentType: "application/jason; charset=utf-8",
-      dataType: "json",
-      data: {'key': window.YOUTUBE_API_KEY,'q': `${query}`, 'maxResults' : '5', 'videoEmbeddable' : 'true', 'type' : 'video', 'part': 'snippet'},
-      success: function(data) {
-        console.log(data);
-        return data;
-      }  
-    });
+  searchOnClick(event) {
+    var obj = {
+      key: window.YOUTUBE_API_KEY,
+      query: $('input').val(),
+      max: 5
+    }
+    window.searchYouTube(obj, this.setState.bind(this));
+  }
+
+  componentDidMount() {
+    window.searchYouTube({key: window.YOUTUBE_API_KEY, query: 'cats', max: 5}, this.setState.bind(this))
   }
 
   render() {
-    var data1 = this.getData('cat');
     return (
       <div>
         <nav className="navbar">
           <div className="col-md-6 offset-md-3">
-            <Search />
+            <Search methods={this.searchOnClick.bind(this)}/>
           </div>
         </nav>
         <div className="row">
           <div className="col-md-7">
-            <VideoPlayer video={exampleVideoData[this.state.currentIndex]}/>
+            <VideoPlayer video={this.state.data[this.state.currentIndex]}/>
           </div>
           <div className="col-md-5" >
-            <VideoList methods={this.videoOnClick.bind(this)} videos={exampleVideoData}/>
+            <VideoList methods={this.videoOnClick.bind(this)} videos={this.state.data}/>
           </div>
         </div>
       </div>
